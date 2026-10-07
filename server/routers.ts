@@ -5,6 +5,7 @@ import { systemRouter } from "./_core/systemRouter";
 import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
 import { analyzeContent, SourceType } from "./scamAnalyzer";
 import { createCommunityReport, createScamScan, getCommunityReports, getRecentScans } from "./db";
+import { getRedisCache } from "./_core/redis";
 
 const sourceTypeSchema = z.enum(["message", "website", "email", "screenshot", "payment", "call", "document"]);
 
@@ -29,7 +30,8 @@ export const appRouter = router({
     analyze: publicProcedure
       .input(z.object({ content: z.string().min(3).max(12000), sourceType: sourceTypeSchema.default("message") }))
       .mutation(async ({ ctx, input }) => {
-        const result = analyzeContent(input.content, input.sourceType as SourceType);
+        const clientIp = ctx.req.ip || ctx.req.connection.remoteAddress || null;
+        const result = await analyzeContent(input.content, input.sourceType as SourceType, clientIp);
         const saved = await createScamScan({
           userId: ctx.user?.id,
           sourceType: input.sourceType,

@@ -31,20 +31,29 @@ export function ThemeProvider({
 
   useEffect(() => {
     const root = document.documentElement;
+    console.log("useEffect: applying theme", theme, "to root");
     if (theme === "dark") {
       root.classList.add("dark");
+      console.log("Added 'dark' class to root");
     } else {
       root.classList.remove("dark");
+      console.log("Removed 'dark' class from root");
     }
 
     if (switchable) {
       localStorage.setItem("theme", theme);
+      console.log("Saved theme to localStorage:", theme);
     }
   }, [theme, switchable]);
 
   const toggleTheme = switchable
     ? () => {
-        setTheme(prev => (prev === "light" ? "dark" : "light"));
+        console.log("toggleTheme called, current theme:", theme);
+        setTheme(prev => {
+          const newTheme = prev === "light" ? "dark" : "light";
+          console.log("Setting theme from", prev, "to", newTheme);
+          return newTheme;
+        });
       }
     : undefined;
 

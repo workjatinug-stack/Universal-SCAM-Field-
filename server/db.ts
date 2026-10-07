@@ -1,21 +1,10 @@
 import { desc, eq } from "drizzle-orm";
-import { drizzle } from "drizzle-orm/mysql2";
 import { communityReports, InsertCommunityReport, InsertScamScan, scamScans, users, InsertUser } from "../drizzle/schema";
 import { ENV } from "./_core/env";
-import * as schema from "../drizzle/schema";
-
-let _db: ReturnType<typeof drizzle> | null = null;
+import { getDb as getPooledDb } from "./_core/database";
 
 export async function getDb() {
-  if (!_db && process.env.DATABASE_URL) {
-    try {
-      _db = drizzle(process.env.DATABASE_URL, { schema });
-    } catch (error) {
-      console.warn("[Database] Failed to connect:", error);
-      _db = null;
-    }
-  }
-  return _db;
+  return await getPooledDb();
 }
 
 export async function upsertUser(user: InsertUser): Promise<void> {

@@ -21,11 +21,12 @@ import {
 } from "@/components/ui/sidebar";
 import { startLogin } from "@/const";
 import { useIsMobile } from "@/hooks/useMobile";
-import { LayoutDashboard, LogOut, PanelLeft, Users } from "lucide-react";
+import { LayoutDashboard, LogOut, PanelLeft, Shield, Users } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { DashboardLayoutSkeleton } from './DashboardLayoutSkeleton';
 import { Button } from "./ui/button";
+import ThemeToggle from "./ThemeToggle";
 
 const menuItems = [
   { icon: LayoutDashboard, label: "Page 1", path: "/" },
@@ -81,17 +82,19 @@ export default function DashboardLayout({
   }
 
   return (
-    <SidebarProvider
-      style={
-        {
-          "--sidebar-width": `${sidebarWidth}px`,
-        } as CSSProperties
-      }
-    >
-      <DashboardLayoutContent setSidebarWidth={setSidebarWidth}>
-        {children}
-      </DashboardLayoutContent>
-    </SidebarProvider>
+    <div style={{ backgroundColor: "var(--background)", color: "var(--foreground)", minHeight: "100vh" }}>
+      <SidebarProvider
+        style={
+          {
+            "--sidebar-width": `${sidebarWidth}px`,
+          } as CSSProperties
+        }
+      >
+        <DashboardLayoutContent setSidebarWidth={setSidebarWidth}>
+          {children}
+        </DashboardLayoutContent>
+      </SidebarProvider>
+    </div>
   );
 }
 
@@ -156,23 +159,68 @@ function DashboardLayoutContent({
           collapsible="icon"
           className="border-r-0"
           disableTransition={isResizing}
+          style={{ backgroundColor: "var(--card)", borderRight: "1px solid var(--border)" }}
         >
-          <SidebarHeader className="h-16 justify-center">
+          <SidebarHeader className="h-16 justify-center" style={{ borderBottom: "1px solid var(--border)" }}>
             <div className="flex items-center gap-3 px-2 transition-all w-full">
               <button
                 onClick={toggleSidebar}
-                className="h-8 w-8 flex items-center justify-center hover:bg-accent rounded-lg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring shrink-0"
+                className="h-8 w-8 flex items-center justify-center rounded-lg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring shrink-0"
+                style={{ backgroundColor: "var(--accent)", border: "1px solid var(--border)" }}
                 aria-label="Toggle navigation"
               >
-                <PanelLeft className="h-4 w-4 text-muted-foreground" />
+                <PanelLeft className="h-4 w-4" style={{ color: "var(--foreground)" }} />
               </button>
               {!isCollapsed ? (
                 <div className="flex items-center gap-2 min-w-0">
-                  <span className="font-semibold tracking-tight truncate">
-                    Navigation
-                  </span>
+                  <div 
+                    className="flex h-9 w-9 items-center justify-center rounded-lg transition-all duration-300 hover:scale-105"
+                    style={{ 
+                      background: "linear-gradient(135deg, rgba(47,167,160,0.15) 0%, rgba(47,167,160,0.05) 100%)",
+                      border: "1.5px solid rgba(47,167,160,0.3)",
+                      boxShadow: "0 0 15px rgba(47,167,160,0.15)"
+                    }}
+                  >
+                    <div className="relative">
+                      <Shield className="h-5 w-5" style={{ color: "#2FA7A0" }} strokeWidth={1.5} />
+                      <div 
+                        className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full"
+                        style={{ backgroundColor: "#2FA7A0", boxShadow: "0 0 6px #2FA7A0" }}
+                      />
+                    </div>
+                  </div>
+                  <div className="flex flex-col min-w-0">
+                    <div className="flex items-baseline gap-0.5">
+                      <span className="font-semibold tracking-tight truncate text-sm" style={{ color: "var(--foreground)" }}>
+                        Scam
+                      </span>
+                      <span 
+                        className="font-semibold tracking-tight truncate text-sm"
+                        style={{ 
+                          color: "#2FA7A0",
+                          textShadow: "0 0 15px rgba(47,167,160,0.3)"
+                        }}
+                      >
+                        Shield
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-1.5 mt-0.5">
+                      <div 
+                        className="h-px w-6"
+                        style={{ background: "linear-gradient(90deg, #2FA7A0 0%, transparent 100%)" }}
+                      />
+                      <span className="text-[8px] font-medium uppercase tracking-[0.15em]" style={{ color: "var(--muted)" }}>
+                        AI-Powered
+                      </span>
+                    </div>
+                  </div>
                 </div>
               ) : null}
+              {!isCollapsed && (
+                <div className="ml-auto">
+                  <ThemeToggle />
+                </div>
+              )}
             </div>
           </SidebarHeader>
 
@@ -187,11 +235,18 @@ function DashboardLayoutContent({
                       onClick={() => setLocation(item.path)}
                       tooltip={item.label}
                       className={`h-10 transition-all font-normal`}
+                      style={{
+                        backgroundColor: isActive ? "var(--accent)" : "transparent",
+                        color: isActive ? "var(--foreground)" : "var(--muted)",
+                        borderRadius: "8px",
+                        margin: "2px 0"
+                      }}
                     >
                       <item.icon
-                        className={`h-4 w-4 ${isActive ? "text-primary" : ""}`}
+                        className={`h-4 w-4`}
+                        style={{ color: isActive ? "#2FA7A0" : "var(--muted)" }}
                       />
-                      <span>{item.label}</span>
+                      <span style={{ color: isActive ? "var(--foreground)" : "var(--muted)" }}>{item.label}</span>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 );
@@ -199,31 +254,32 @@ function DashboardLayoutContent({
             </SidebarMenu>
           </SidebarContent>
 
-          <SidebarFooter className="p-3">
+          <SidebarFooter className="p-3" style={{ borderTop: "1px solid var(--border)" }}>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="flex items-center gap-3 rounded-lg px-1 py-1 hover:bg-accent/50 transition-colors w-full text-left group-data-[collapsible=icon]:justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-ring">
-                  <Avatar className="h-9 w-9 border shrink-0">
-                    <AvatarFallback className="text-xs font-medium">
+                <button className="flex items-center gap-3 rounded-lg px-1 py-1 transition-colors w-full text-left group-data-[collapsible=icon]:justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-ring" style={{ backgroundColor: "var(--accent)", border: "1px solid var(--border)" }}>
+                  <Avatar className="h-9 w-9 border shrink-0" style={{ borderColor: "var(--border)" }}>
+                    <AvatarFallback className="text-xs font-medium" style={{ backgroundColor: "var(--card)", color: "var(--foreground)" }}>
                       {user?.name?.charAt(0).toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex-1 min-w-0 group-data-[collapsible=icon]:hidden">
-                    <p className="text-sm font-medium truncate leading-none">
+                    <p className="text-sm font-medium truncate leading-none" style={{ color: "var(--foreground)" }}>
                       {user?.name || "-"}
                     </p>
-                    <p className="text-xs text-muted-foreground truncate mt-1.5">
+                    <p className="text-xs truncate mt-1.5" style={{ color: "var(--muted)" }}>
                       {user?.email || "-"}
                     </p>
                   </div>
                 </button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-48">
+              <DropdownMenuContent align="end" className="w-48" style={{ backgroundColor: "var(--card)", border: "1px solid var(--border)" }}>
                 <DropdownMenuItem
                   onClick={logout}
-                  className="cursor-pointer text-destructive focus:text-destructive"
+                  className="cursor-pointer"
+                  style={{ color: "var(--foreground)" }}
                 >
-                  <LogOut className="mr-2 h-4 w-4" />
+                  <LogOut className="mr-2 h-4 w-4" style={{ color: "#C95C5C" }} />
                   <span>Sign out</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -242,20 +298,24 @@ function DashboardLayoutContent({
 
       <SidebarInset>
         {isMobile && (
-          <div className="flex border-b h-14 items-center justify-between bg-background/95 px-2 backdrop-blur supports-[backdrop-filter]:backdrop-blur sticky top-0 z-40">
+          <div className="flex border-b h-14 items-center justify-between px-2 backdrop-blur supports-[backdrop-filter]:backdrop-blur sticky top-0 z-40" style={{ backgroundColor: "var(--background)", borderBottom: "1px solid var(--border)" }}>
             <div className="flex items-center gap-2">
-              <SidebarTrigger className="h-9 w-9 rounded-lg bg-background" />
+              <SidebarTrigger className="h-9 w-9 rounded-lg" style={{ backgroundColor: "var(--accent)", border: "1px solid var(--border)" }} />
               <div className="flex items-center gap-3">
                 <div className="flex flex-col gap-1">
-                  <span className="tracking-tight text-foreground">
+                  <span className="tracking-tight text-sm font-semibold" style={{ color: "var(--foreground)" }}>
+                    Scam<span style={{ color: "#2FA7A0" }}>Shield</span>
+                  </span>
+                  <span className="text-[8px] font-medium uppercase tracking-[0.15em]" style={{ color: "var(--muted)" }}>
                     {activeMenuItem?.label ?? "Menu"}
                   </span>
                 </div>
               </div>
             </div>
+            <ThemeToggle />
           </div>
         )}
-        <main className="flex-1 p-4">{children}</main>
+        <main className="flex-1 p-4" style={{ backgroundColor: "var(--background)" }}>{children}</main>
       </SidebarInset>
     </>
   );
