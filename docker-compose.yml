@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  sentra:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sentra-scam-detector
+    ports:
+      - "10000:10000"
+    environment:
+      - NODE_ENV=production
+      - PORT=10000
+      - SCALING_ENABLED=false
+      # Optional: Uncomment to use MySQL
+      # - DB_HOST=mysql
+      # - DB_PORT=3306
+      # - DB_USER=root
+      # - DB_PASSWORD=password
+      # - DB_NAME=sentra
+      # Optional: Uncomment to use Redis
+      # - REDIS_URL=redis://redis:6379
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:10000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Optional: MySQL Database
+  # mysql:
+  #   image: mysql:8.0
+  #   container_name: sentra-mysql
+  #   environment:
+  #     - MYSQL_ROOT_PASSWORD=password
+  #     - MYSQL_DATABASE=sentra
+  #   ports:
+  #     - "3306:3306"
+  #   volumes:
+  #     - mysql_data:/var/lib/mysql
+  #   restart: unless-stopped
+
+  # Optional: Redis Cache
+  # redis:
+  #   image: redis:7-alpine
+  #   container_name: sentra-redis
+  #   ports:
+  #     - "6379:6379"
+  #   volumes:
+  #     - redis_data:/data
+  #   restart: unless-stopped
+
+# Optional: Volume for MySQL
+# volumes:
+#   mysql_data:
+#   redis_data:
