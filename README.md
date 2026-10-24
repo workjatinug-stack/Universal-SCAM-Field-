@@ -66,10 +66,6 @@ The app uses MySQL with the following tables:
 
 Database migrations are handled via Drizzle Kit.
 
-## ML Service
-
-The scam analysis is implemented using deterministic rule-based pattern matching in TypeScript (`server/scamAnalyzer.ts`). No external ML service is required. The `ml_service/` directory is prepared for future ML enhancements but is not currently used.
-
 ## Scripts
 
 - `pnpm run dev` - Start development server

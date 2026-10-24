@@ -30,6 +30,6 @@ ScamShield is an AI-powered universal scam detection and verification system. Th
 
 ## Production hardening roadmap
 
-The current scoring engine is intentionally deterministic and explainable so the MVP works without a model server. The next step is to train a versioned scikit-learn classifier on reviewed scam examples, add NLTK normalization and OCR extraction for images, and let the Node service call `ml_service/analyze.py` behind a bounded request timeout. A MongoDB repository adapter can be added when a MongoDB deployment and connection secret are available; the current WebDev runtime uses its managed SQL database for reliable preview and authentication integration.
+The current scoring engine is intentionally deterministic and explainable so the MVP works without a model server. The scam analysis is fully implemented in TypeScript using 70+ detection patterns across 12 scam categories. Future enhancements could include training ML models on reviewed scam examples and adding OCR extraction for images. A MongoDB repository adapter can be added when a MongoDB deployment and connection secret is available; the current runtime uses an in-memory fallback or SQL database for reliable operation.
 
 The app should also add rate limiting, content redaction before persistence, abuse monitoring, verified-source allowlists, and human review for high-impact decisions. ScamShield is an assistive security tool and should not be treated as a substitute for official verification.

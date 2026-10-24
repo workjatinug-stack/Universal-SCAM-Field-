@@ -33,10 +33,6 @@
 - Created `README.md` with project overview and quick start
 - Created `CHANGELOG.md` documenting all changes
 
-## ML Service Status
-
-**NOT REQUIRED** - The `ml_service/` directory only contains `requirements.txt` with no actual Python code. The scam analysis is fully implemented in TypeScript using deterministic rule-based pattern matching in `server/scamAnalyzer.ts`. No separate ML service deployment is needed.
-
 ## Environment Variables Required
 
 For production deployment, set these in your hosting platform:
