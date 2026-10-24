@@ -45,14 +45,16 @@ async function startServer() {
   const monitoring = getMonitoringSystem();
   monitoring.info("system", "Application startup initiated");
   
-  // Initialize scaling (cluster mode)
-  await initializeScaling();
-  
-  // Only continue with server setup if we're in a worker process or scaling is disabled
-  if (cluster.isPrimary && process.env.SCALING_ENABLED === "true") {
-    console.log("Primary process managing workers, not starting server");
-    monitoring.info("system", "Primary process managing workers");
-    return;
+  // Initialize scaling (cluster mode) - disabled in production for Render
+  if (process.env.NODE_ENV !== "production") {
+    await initializeScaling();
+    
+    // Only continue with server setup if we're in a worker process or scaling is disabled
+    if (cluster.isPrimary && process.env.SCALING_ENABLED === "true") {
+      console.log("Primary process managing workers, not starting server");
+      monitoring.info("system", "Primary process managing workers");
+      return;
+    }
   }
   
   // Initialize Redis cache (optional)
@@ -182,11 +184,13 @@ async function startServer() {
     serveStatic(app);
   }
 
-  const preferredPort = parseInt(process.env.PORT || "3000");
-  const port = await findAvailablePort(preferredPort);
+  // In production (Render), use PORT directly without port checking
+  const port = process.env.NODE_ENV === "production" 
+    ? parseInt(process.env.PORT || "10000")
+    : await findAvailablePort(parseInt(process.env.PORT || "3000"));
 
-  if (port !== preferredPort) {
-    console.log(`Port ${preferredPort} is busy, using port ${port} instead`);
+  if (process.env.NODE_ENV !== "production" && port !== parseInt(process.env.PORT || "3000")) {
+    console.log(`Port ${process.env.PORT || "3000"} is busy, using port ${port} instead`);
   }
 
   server.listen(port, () => {

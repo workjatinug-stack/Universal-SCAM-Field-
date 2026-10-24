@@ -1,84 +1,147 @@
-# ScamShield Deployment Guide
+# Sentra - Deployment Guide
 
-## Production Deployment on Render
+## Deployment on Render
 
 ### Prerequisites
+- GitHub repository with your code
 - Render account (free tier available)
-- GitHub repository with this code
-- MySQL database (can use Render's managed MySQL or external provider)
+- pnpm package manager
 
-### Environment Variables Required
+### Step 1: Prepare Your Repository
+Ensure your repository includes:
+- ✅ `render.yaml` configuration file
+- ✅ `package.json` with correct scripts
+- ✅ `.env.example` for environment variables
+- ✅ All code committed and pushed to GitHub
 
-Set these in your Render dashboard:
+### Step 2: Deploy on Render
 
-**Required:**
-- `NODE_ENV` = `production`
-- `PORT` = `10000` (Render's default port)
-- `DATABASE_URL` = Your MySQL connection string (e.g., `mysql://user:password@host:3306/database`)
-- `VITE_APP_ID` = Your OAuth application ID
-- `JWT_SECRET` = Strong random secret for session signing (auto-generated if not set)
-- `OAUTH_SERVER_URL` = Your OAuth server URL
-- `VITE_OAUTH_PORTAL_URL` = Your OAuth portal URL
-- `OWNER_OPEN_ID` = Your owner's openId for admin role
-
-### Deployment Steps
-
-1. **Push code to GitHub**
-   ```bash
-   git add .
-   git commit -m "Production deployment configuration"
-   git push origin main
-   ```
-
-2. **Create MySQL Database**
-   - Option A: Use Render's managed MySQL (add via Render dashboard)
-   - Option B: Use external MySQL provider (PlanetScale, AWS RDS, etc.)
-   - Get your DATABASE_URL connection string
-
-3. **Deploy to Render**
-   - Go to render.com
+1. **Connect Your GitHub Repository**
+   - Go to [Render Dashboard](https://dashboard.render.com/)
    - Click "New +" → "Web Service"
    - Connect your GitHub repository
-   - Render will auto-detect `render.yaml` configuration
-   - Fill in the required environment variables
-   - Click "Deploy Web Service"
+   - Select the branch (usually `main`)
 
-4. **Database Migration**
-   - The application will auto-create tables on first startup
-   - Or manually run: `pnpm run db:migrate`
+2. **Configure Build Settings**
+   - **Runtime**: Node
+   - **Build Command**: `pnpm install --frozen-lockfile && pnpm run build`
+   - **Start Command**: `pnpm run start`
+   - **Node Version**: 18 or higher
 
-### Verification
+3. **Configure Environment Variables**
+   Render will automatically detect these from `render.yaml`:
+   - `NODE_ENV` = `production`
+   - `PORT` = `10000`
+   - `SCALING_ENABLED` = `false`
+   
+   Optional variables (configure in Render dashboard):
+   - `OAUTH_SERVER_URL` (for OAuth authentication)
+   - `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, `DB_NAME` (for MySQL)
+   - `REDIS_URL` (for Redis caching)
 
-After deployment, test:
-- Health check: `https://your-app.onrender.com/health`
-- Homepage: `https://your-app.onrender.com/`
-- API: `https://your-app.onrender.com/api/trpc/system.health`
+4. **Deploy**
+   - Click "Create Web Service"
+   - Wait for the build to complete (~2-3 minutes)
+   - Your app will be live at `https://sentra-scam-detector.onrender.com`
 
-### Architecture
+### Step 3: Post-Deployment
 
-- **Frontend**: React 19 + Vite (bundled with backend)
-- **Backend**: Node.js + Express + tRPC
-- **Database**: MySQL with Drizzle ORM
-- **ML Service**: Not required (analysis is rule-based in TypeScript)
-- **Hosting**: Render (Web Service + optional MySQL)
+1. **Test Your Deployment**
+   - Visit your Render URL
+   - Check if the landing page loads
+   - Test scam detection functionality
+   - Verify all 12 scam categories work
 
-### ML Service Note
+2. **Monitor Logs**
+   - Go to Render Dashboard → Your Service → Logs
+   - Check for any runtime errors
+   - Monitor server startup logs
 
-The `ml_service/` directory contains only `requirements.txt` but no Python code. The scam analysis is implemented entirely in `server/scamAnalyzer.ts` using deterministic rule-based pattern matching. No separate ML service deployment is needed.
+3. **Set Up Automatic Deploys**
+   - Render auto-deploys on push to main branch
+   - Changes to `render.yaml` require manual redeploy
 
-### Troubleshooting
+## Environment Variables
 
-**Build fails:**
-- Check that all environment variables are set
-- Verify DATABASE_URL format
-- Check Render build logs
+### Required (Auto-configured)
+- `NODE_ENV` = `production`
+- `PORT` = `10000`
+- `SCALING_ENABLED` = `false`
 
-**Database connection fails:**
-- Verify DATABASE_URL is correct
-- Check database allows connections from Render's IP
-- Ensure database user has proper permissions
+### Optional (Configure in Render Dashboard)
+- `OAUTH_SERVER_URL` - OAuth server URL for authentication
+- `DB_HOST` - MySQL database host
+- `DB_PORT` - MySQL database port (default: 3306)
+- `DB_USER` - MySQL database user
+- `DB_PASSWORD` - MySQL database password
+- `DB_NAME` - MySQL database name
+- `REDIS_URL` - Redis connection URL
 
-**OAuth fails:**
-- Verify OAUTH_SERVER_URL and VITE_OAUTH_PORTAL_URL
-- Check VITE_APP_ID matches your OAuth app
-- Ensure redirect URI includes your Render domain
+## Troubleshooting
+
+### Build Fails
+- Check Node version (must be >= 18)
+- Verify `pnpm-lock.yaml` exists
+- Check package.json scripts
+
+### Runtime Errors
+- Check Render logs for errors
+- Verify PORT is set to 10000
+- Ensure all dependencies are installed
+
+### White Screen
+- Check browser console for errors
+- Verify build completed successfully
+- Check server logs for startup errors
+
+### Database Connection Errors
+- Database is optional for basic functionality
+- App works with in-memory fallback
+- Configure DB variables if you need persistence
+
+## Production Optimizations
+
+### Free Tier Limitations
+- 512 MB RAM
+- Shared CPU
+- Free SSL certificate
+- 750 hours/month
+
+### Upgrade Recommendations
+- For higher traffic, upgrade to Starter plan
+- Add PostgreSQL for data persistence
+- Add Redis for better caching
+- Configure custom domain
+
+## Health Check
+
+Your deployment includes a health check endpoint:
+```
+https://your-app-url.onrender.com/health
+```
+
+This returns:
+- Server status
+- WebSocket stats
+- Database health
+- Scaling information
+- Memory usage
+- Uptime
+
+## Support
+
+For issues:
+1. Check Render logs
+2. Review this guide
+3. Check GitHub issues
+4. Contact Render support
+
+## Local Production Build
+
+To test production build locally:
+```bash
+pnpm run build
+pnpm run start
+```
+
+This mimics the Render production environment.
