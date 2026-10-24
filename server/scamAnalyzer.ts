@@ -34,8 +34,9 @@ const signalRules: Array<{ label: string; weight: number; pattern: RegExp; categ
   { label: "ATM/Blok notification", weight: 21, pattern: /atm card blocked|bank account blocked|payment blocked|transaction failed/i, category: "banking" },
   
   // Investment Scams
-  { label: "Guaranteed returns", weight: 24, pattern: /guaranteed returns|guaranteed profit|risk[- ]free investment|100%\s*return/i, category: "investment" },
-  { label: "High-yield promises", weight: 23, pattern: /double your money|10x return|passive income|financial freedom|instant profit/i, category: "investment" },
+  { label: "Guaranteed returns", weight: 30, pattern: /guaranteed returns|guaranteed profit|risk[- ]free investment|100%\s*return|guaranteed investment/i, category: "investment" },
+  { label: "Double money scam", weight: 32, pattern: /double your money|double in.*hours|double in.*days/i, category: "investment" },
+  { label: "High-yield promises", weight: 28, pattern: /10x return|passive income|financial freedom|instant profit/i, category: "investment" },
   { label: "Cryptocurrency investment", weight: 22, pattern: /bitcoin investment|crypto trading|ethereum investment|blockchain profit/i, category: "investment" },
   { label: "Stock trading scams", weight: 21, pattern: /stock tips|trading signals|insider information|penny stock/i, category: "investment" },
   { label: "Forex/trading scams", weight: 20, pattern: /forex|binary options|auto trading|trading bot|investment platform/i, category: "investment" },
@@ -47,10 +48,14 @@ const signalRules: Array<{ label: string; weight: number; pattern: RegExp; categ
   { label: "Fake giveaways", weight: 22, pattern: /free gift|free iphone|free laptop|giveaway|contest winner/i, category: "lottery" },
   
   // Fake Job Offers
-  { label: "Work from home scam", weight: 23, pattern: /work from home|easy money|no experience needed|daily earning|part-time job/i, category: "job" },
-  { label: "Fake job interview", weight: 22, pattern: /job offer|salary package|joining bonus|recruitment fee|registration fee/i, category: "job" },
-  { label: "Telegram/WhatsApp job scam", weight: 21, pattern: /telegram job|whatsapp job|remote job|online job|typing job/i, category: "job" },
-  { label: "High salary for simple work", weight: 24, pattern: /\$\d+ per hour|\$\d+ per day|excellent salary|lucrative offer/i, category: "job" },
+  { label: "Work from home scam", weight: 25, pattern: /work[- ]from[- ]home|easy money|no experience needed|daily earning|part[- ]time job/i, category: "job" },
+  { label: "Upfront registration fee", weight: 30, pattern: /pay a registration fee|pay registration fee|registration fee to start|registration fee.*start/i, category: "job" },
+  { label: "Job upfront payment", weight: 28, pattern: /pay.*registration fee|pay.*recruitment fee|pay.*joining fee|pay.*training fee|pay.*onboarding fee/i, category: "job" },
+  { label: "Job selection scam", weight: 26, pattern: /you have been selected|congratulations.*selected|selected for.*job|you are selected/i, category: "job" },
+  { label: "Daily earning promise", weight: 27, pattern: /earn.*daily.*\d+|daily.*\d+.*earning|\d+.*per day|\d+.*daily/i, category: "job" },
+  { label: "Telegram/WhatsApp job scam", weight: 22, pattern: /telegram job|whatsapp job|remote job|online job|typing job/i, category: "job" },
+  { label: "High salary for simple work", weight: 26, pattern: /\$\d+ per hour|\$\d+ per day|₹\d+ per day|₹\d+ daily|excellent salary|lucrative offer|instant earning/i, category: "job" },
+  { label: "Guaranteed job offer", weight: 24, pattern: /guaranteed job|guaranteed work|guaranteed income|guaranteed salary/i, category: "job" },
   
   // Fake Shopping Scams
   { label: "Fake online store", weight: 22, pattern: /limited stock|clearance sale|90%\s*off|too good to be true|unbelievable price/i, category: "shopping" },
@@ -255,59 +260,75 @@ export async function analyzeContent(
     monitoring.error("cache", "Cache check error", { error: error instanceof Error ? error.message : String(error) });
   }
 
-  const matches = signalRules.filter((rule) => rule.pattern.test(cleanText));
-  const baseline = sourceType === "website" ? 15 : sourceType === "payment" ? 20 : sourceType === "email" ? 12 : 5;
-  let riskScore = Math.min(99, Math.max(4, baseline + matches.reduce((sum, rule) => sum + rule.weight, 0)));
-  
-  // Extract and analyze URLs
-  const urls = extractURLs(cleanText);
-  const urlAnalysis = analyzeURLs(urls);
-  if (urlAnalysis.suspiciousDomains.length > 0) {
-    riskScore = Math.min(99, riskScore + 10 * urlAnalysis.suspiciousDomains.length);
-  }
-  
-  // Analyze geographic risk
-  const geographicRisk = await analyzeGeographicRisk(clientIp);
-  if (geographicRisk) {
-    if (geographicRisk.riskLevel === "high") {
-      riskScore = Math.min(99, riskScore + 15);
-    } else if (geographicRisk.riskLevel === "medium") {
-      riskScore = Math.min(99, riskScore + 8);
-    }
-  }
-
-  const riskBand = riskScore <= 20 ? "Low Risk" : riskScore <= 40 ? "Relatively Low" : riskScore <= 60 ? "Suspicious" : riskScore <= 80 ? "High Risk" : "Very High Risk";
-  const reasons = matches.length
-    ? matches.map((match) => match.label)
-    : ["No high-confidence scam indicators detected in the submitted content"];
-  
-  const recommendation = riskScore >= 81
-    ? "CRITICAL: Do not click links or make payments. This is a confirmed scam pattern. Verify the sender through an official channel and report immediately."
-    : riskScore >= 61
-      ? "HIGH RISK: Pause before responding. Independently verify the sender, domain, and payment details through official channels."
-      : riskScore >= 41
-        ? "SUSPICIOUS: Treat this with caution. Avoid sharing credentials and look for an official source before proceeding."
-        : "LOW RISK: No immediate red flags found. Continue using normal security best practices and verify independently.";
-
-  const result: AnalysisResult = {
-    riskScore,
-    riskBand,
-    scamType: inferScamType(cleanText, matches),
-    reasons,
-    recommendation,
-    matchedIndicators: matches.map((match) => match.label),
-    cached: false,
-    geographicRisk,
-    urlAnalysis: urls.length > 0 ? urlAnalysis : undefined,
-  };
-
   try {
-    const cache = getRedisCache();
-    await cache.cacheAnalysisResult(contentHash, result, 86400);
-  } catch (error) {
-    monitoring.error("cache", "Cache set error", { error: error instanceof Error ? error.message : String(error) });
-  }
+    const matches = signalRules.filter((rule) => rule.pattern.test(cleanText));
+    const baseline = sourceType === "website" ? 15 : sourceType === "payment" ? 20 : sourceType === "email" ? 12 : 5;
+    let riskScore = Math.min(99, Math.max(4, baseline + matches.reduce((sum, rule) => sum + rule.weight, 0)));
+    
+    // Extract and analyze URLs
+    const urls = extractURLs(cleanText);
+    const urlAnalysis = analyzeURLs(urls);
+    if (urlAnalysis.suspiciousDomains.length > 0) {
+      riskScore = Math.min(99, riskScore + 10 * urlAnalysis.suspiciousDomains.length);
+    }
+    
+    // Analyze geographic risk
+    const geographicRisk = await analyzeGeographicRisk(clientIp);
+    if (geographicRisk) {
+      if (geographicRisk.riskLevel === "high") {
+        riskScore = Math.min(99, riskScore + 15);
+      } else if (geographicRisk.riskLevel === "medium") {
+        riskScore = Math.min(99, riskScore + 8);
+      }
+    }
 
-  monitoring.logScamAnalysis(riskScore, result.scamType, false);
-  return result;
+    const riskBand = riskScore <= 20 ? "Low Risk" : riskScore <= 40 ? "Relatively Low" : riskScore <= 60 ? "Suspicious" : riskScore <= 80 ? "High Risk" : "Very High Risk";
+    const reasons = matches.length
+      ? matches.map((match) => match.label)
+      : ["No high-confidence scam indicators detected in the submitted content"];
+    
+    const recommendation = riskScore >= 81
+      ? "CRITICAL: Do not click links or make payments. This is a confirmed scam pattern. Verify the sender through an official channel and report immediately."
+      : riskScore >= 61
+        ? "HIGH RISK: Pause before responding. Independently verify the sender, domain, and payment details through official channels."
+        : riskScore >= 41
+          ? "SUSPICIOUS: Treat this with caution. Avoid sharing credentials and look for an official source before proceeding."
+          : "LOW RISK: No immediate red flags found. Continue using normal security best practices and verify independently.";
+
+    const result: AnalysisResult = {
+      riskScore,
+      riskBand,
+      scamType: inferScamType(cleanText, matches),
+      reasons,
+      recommendation,
+      matchedIndicators: matches.map((match) => match.label),
+      cached: false,
+      geographicRisk,
+      urlAnalysis: urls.length > 0 ? urlAnalysis : undefined,
+    };
+
+    try {
+      const cache = getRedisCache();
+      await cache.cacheAnalysisResult(contentHash, result, 86400);
+    } catch (error) {
+      monitoring.error("cache", "Cache set error", { error: error instanceof Error ? error.message : String(error) });
+    }
+
+    monitoring.logScamAnalysis(riskScore, result.scamType, false);
+    return result;
+  } catch (error) {
+    // Explicit error handling - never silently return "Safe"
+    monitoring.error("analysis", "Analysis failed", { error: error instanceof Error ? error.message : String(error) });
+    
+    // Return a conservative high-risk result on failure
+    return {
+      riskScore: 50,
+      riskBand: "Suspicious",
+      scamType: "Analysis Error",
+      reasons: ["Analysis system error - please try again or verify manually"],
+      recommendation: "ANALYSIS ERROR: The scam detection system encountered an error. Please verify the content manually through official channels before proceeding.",
+      matchedIndicators: ["System Error"],
+      cached: false,
+    };
+  }
 }
