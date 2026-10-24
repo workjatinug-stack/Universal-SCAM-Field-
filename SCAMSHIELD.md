@@ -8,11 +8,11 @@ ScamShield is an AI-powered universal scam detection and verification system. Th
 | --- | --- |
 | Frontend | React 19 + TypeScript + Tailwind CSS 4 + Lucide icons |
 | Backend | Node.js + Express runtime + tRPC procedures for typed API contracts |
-| Persistence | Drizzle ORM on the managed MySQL/TiDB database supplied by the WebDev full-stack scaffold |
-| AI/ML | Explainable signal engine in TypeScript, with a Python service contract prepared for scikit-learn, NLP, and OCR |
+| Persistence | Drizzle ORM with MySQL support and in-memory fallback for development |
+| AI/ML | Explainable signal engine in TypeScript with 70+ detection patterns across 12 scam categories |
 | APIs | Typed tRPC procedures under `/api/trpc`; the analysis and community-report contracts are ready to be exposed through REST adapters if required |
-| Security | Manus OAuth session flow, JWT-signed session cookie infrastructure, protected data procedures, and safe no-database fallbacks |
-| Delivery | Dockerfile with Node.js, Python 3, scikit-learn, NLTK, Pillow, and Tesseract OCR support |
+| Security | Optional OAuth session flow, rate limiting, and safe no-database fallbacks |
+| Delivery | Dockerfile with Node.js and optimized for cloud deployment (Render, Docker) |
 
 ## Product workflow
 
