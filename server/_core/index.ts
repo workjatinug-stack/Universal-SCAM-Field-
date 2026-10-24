@@ -55,13 +55,21 @@ async function startServer() {
     return;
   }
   
-  // Initialize Redis cache
-  await initializeRedis();
-  monitoring.info("system", "Redis cache initialized");
+  // Initialize Redis cache (optional)
+  try {
+    await initializeRedis();
+    monitoring.info("system", "Redis cache initialized");
+  } catch (error) {
+    // Redis is optional for development
+  }
   
-  // Initialize database with connection pooling
-  await initializeDatabase();
-  monitoring.info("system", "Database connection pool initialized");
+  // Initialize database with connection pooling (optional)
+  try {
+    await initializeDatabase();
+    monitoring.info("system", "Database connection pool initialized");
+  } catch (error) {
+    // Database is optional for development
+  }
   
   const app = express();
   const server = createServer(app);
@@ -187,11 +195,7 @@ async function startServer() {
     
     console.log(`Server running on http://localhost:${port}/`);
     console.log(`WebSocket server ready for real-time connections`);
-    console.log(`Redis cache ${process.env.REDIS_HOST ? 'connected' : 'disabled (running without cache)'}`);
-    console.log(`Database connection pool with advanced indexing enabled`);
     console.log(`Security middleware enabled with rate limiting and advanced protection`);
-    console.log(`Scaling mode: ${scalingStats.isPrimary ? 'Primary process' : `Worker ${scalingStats.workerId}`}`);
-    console.log(`Active workers: ${scalingStats.activeWorkers}/${scalingStats.totalWorkers}`);
     console.log(`Monitoring system active`);
     
     monitoring.info("system", `Server started successfully on port ${port}`, {

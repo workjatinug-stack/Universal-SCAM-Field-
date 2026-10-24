@@ -5,11 +5,8 @@ export default function ThemeToggle() {
   const { theme, toggleTheme } = useTheme();
 
   const handleToggle = () => {
-    console.log("Theme toggle clicked, current theme:", theme);
     if (toggleTheme) {
       toggleTheme();
-    } else {
-      console.error("toggleTheme is not available");
     }
   };
 

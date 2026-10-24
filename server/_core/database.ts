@@ -70,7 +70,7 @@ class DatabaseConnectionPool {
       this.db = drizzle(this.pool, { schema, mode: "default" });
 
     } catch (error) {
-      console.error("Failed to initialize database connection pool:", error);
+      // Silently fail for development - database is optional
       throw error;
     }
   }
@@ -263,7 +263,7 @@ export async function initializeDatabase(): Promise<void> {
     await pool.initialize();
     await pool.createIndexes();
   } catch (error) {
-    console.warn("Database initialization failed, running without database:", error);
+    // Silently fail for development - database is optional
   }
 }
 

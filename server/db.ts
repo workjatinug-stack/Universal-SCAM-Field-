@@ -3,8 +3,19 @@ import { communityReports, InsertCommunityReport, InsertScamScan, scamScans, use
 import { ENV } from "./_core/env";
 import { getDb as getPooledDb } from "./_core/database";
 
+// In-memory storage for development without database
+const inMemoryScans: any[] = [];
+const inMemoryReports: any[] = [];
+let scanIdCounter = 1;
+let reportIdCounter = 1;
+
 export async function getDb() {
-  return await getPooledDb();
+  try {
+    return await getPooledDb();
+  } catch (error) {
+    // Database not available - return null for in-memory fallback
+    return null;
+  }
 }
 
 export async function upsertUser(user: InsertUser): Promise<void> {
@@ -46,27 +57,51 @@ export async function getUserByOpenId(openId: string) {
 
 export async function createScamScan(scan: InsertScamScan) {
   const db = await getDb();
-  if (!db) return undefined;
+  if (!db) {
+    // In-memory fallback for development
+    const scanWithId = { id: scanIdCounter++, ...scan, createdAt: new Date() };
+    inMemoryScans.unshift(scanWithId);
+    if (inMemoryScans.length > 50) inMemoryScans.pop();
+    return scanWithId;
+  }
   const result = await db.insert(scamScans).values(scan);
   return { id: Number(result[0].insertId), ...scan };
 }
 
 export async function getRecentScans(userId?: number) {
   const db = await getDb();
-  if (!db) return [];
+  if (!db) {
+    // Return in-memory scans or demo data
+    if (inMemoryScans.length > 0) {
+      return inMemoryScans.slice(0, 20);
+    }
+    return [];
+  }
   const query = userId ? db.select().from(scamScans).where(eq(scamScans.userId, userId)) : db.select().from(scamScans);
   return query.orderBy(desc(scamScans.createdAt)).limit(20);
 }
 
 export async function createCommunityReport(report: InsertCommunityReport) {
   const db = await getDb();
-  if (!db) return undefined;
+  if (!db) {
+    // In-memory fallback for development
+    const reportWithId = { id: reportIdCounter++, ...report, createdAt: new Date(), status: "reviewing" };
+    inMemoryReports.unshift(reportWithId);
+    if (inMemoryReports.length > 50) inMemoryReports.pop();
+    return reportWithId;
+  }
   const result = await db.insert(communityReports).values(report);
   return { id: Number(result[0].insertId), ...report };
 }
 
 export async function getCommunityReports() {
   const db = await getDb();
-  if (!db) return [];
+  if (!db) {
+    // Return in-memory reports or demo data
+    if (inMemoryReports.length > 0) {
+      return inMemoryReports.slice(0, 50);
+    }
+    return [];
+  }
   return db.select().from(communityReports).orderBy(desc(communityReports.createdAt)).limit(50);
 }

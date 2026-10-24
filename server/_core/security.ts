@@ -34,7 +34,7 @@ export const analysisRateLimiter = createRateLimiter(60 * 1000, 10); // 10 analy
 
 // Security headers middleware
 export const securityHeaders = helmet({
-  contentSecurityPolicy: {
+  contentSecurityPolicy: process.env.NODE_ENV === "production" ? {
     directives: {
       defaultSrc: ["'self'"],
       styleSrc: ["'self'", "'unsafe-inline'"],
@@ -46,7 +46,7 @@ export const securityHeaders = helmet({
       mediaSrc: ["'self'"],
       frameSrc: ["'none'"],
     },
-  },
+  } : false, // Disable CSP in development for Vite HMR
   crossOriginEmbedderPolicy: false,
   crossOriginOpenerPolicy: false,
   crossOriginResourcePolicy: { policy: "cross-origin" },

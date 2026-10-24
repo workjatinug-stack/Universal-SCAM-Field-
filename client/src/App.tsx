@@ -24,9 +24,9 @@ export default function App() {
     <ErrorBoundary>
       <ThemeProvider defaultTheme="dark" switchable>
         <TooltipProvider>
+          <Router />
           <AnimatedBackground />
           <Toaster theme="dark" />
-          <Router />
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>

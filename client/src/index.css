@@ -5,38 +5,49 @@
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   
-  /* Light theme colors */
+  /* Light theme colors (default) */
   --background: #FFFFFF;
   --foreground: #1A1A1A;
   --muted: #6B7280;
   --accent: #F3F4F6;
   --border: rgba(0, 0, 0, 0.1);
   --card: #F9FAFB;
-  --selection-bg: rgba(47, 167, 160, 0.2);
+  --selection-bg: rgba(0, 200, 255, 0.2);
   
-  /* Brand colors */
-  --brand-primary: #2FA7A0;
-  --brand-hover: #38B8AF;
-  --success: #4E9F72;
-  --warning: #D99A3D;
-  --danger: #C95C5C;
+  /* SENTRA Brand colors - Professional Cybersecurity Theme */
+  --brand-primary: #00C8FF;
+  --brand-secondary: #0066FF;
+  --brand-accent: #00A8FF;
+  --brand-cyan: #00D4FF;
+  --brand-deep: #0055AA;
+  --success: #00E676;
+  --warning: #FFB800;
+  --danger: #FF3D00;
+  --threat: #FF1A1A;
 }
 
 html.dark {
-  /* Dark theme colors */
-  --background: #0B1117;
-  --foreground: #F1F3F5;
-  --muted: #9AA6B2;
-  --accent: #111A22;
-  --border: rgba(150, 170, 185, 0.12);
-  --card: #111A22;
-  --selection-bg: rgba(47, 167, 160, 0.3);
+  /* Dark theme colors - SENTRA Futuristic Dark */
+  --background: #05080a;
+  --foreground: #E8F4FF;
+  --muted: #7A9CB5;
+  --accent: #0A1218;
+  --border: rgba(0, 200, 255, 0.15);
+  --card: #0F1A22;
+  --selection-bg: rgba(0, 200, 255, 0.3);
   
-  /* Dashboard-specific colors */
-  --surface: #111A22;
-  --surface-secondary: #16212B;
-  --border-subtle: rgba(150, 170, 185, 0.12);
-  --border-strong: rgba(150, 170, 185, 0.18);
+  /* SENTRA Dashboard-specific colors */
+  --surface: #0F1A22;
+  --surface-secondary: #142432;
+  --border-subtle: rgba(0, 200, 255, 0.08);
+  --border-strong: rgba(0, 200, 255, 0.2);
+  
+  /* Additional cyber colors */
+  --neon-cyan: #00F0FF;
+  --neon-blue: #0080FF;
+  --neon-purple: #8000FF;
+  --glass-bg: rgba(0, 30, 60, 0.4);
+  --glass-border: rgba(0, 200, 255, 0.2);
 }
 
 * { box-sizing: border-box; }
@@ -67,4 +78,69 @@ button { cursor: pointer; }
   button:active { transform: scale(0.98); }
 }
 
-.line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.line-clamp-2 { 
+  display: -webkit-box; 
+  -webkit-line-clamp: 2; 
+  line-clamp: 2;
+  -webkit-box-orient: vertical; 
+  overflow: hidden; 
+}
+
+/* Glassmorphism styles for SENTRA */
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  box-shadow: 
+    0 4px 30px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card:hover {
+  transform: translateY(-4px) scale(1.01);
+  border-color: rgba(0, 200, 255, 0.4);
+  box-shadow: 
+    0 8px 40px rgba(0, 200, 255, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  background: rgba(0, 40, 80, 0.5);
+}
+
+/* Scroll reveal animation */
+@keyframes scrollReveal {
+  from {
+    opacity: 0;
+    transform: translateY(40px) scale(0.96);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+.scroll-reveal {
+  opacity: 0;
+  animation: scrollReveal 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Cinematic zoom effect for sections */
+.cinematic-zoom {
+  transform-origin: center center;
+  will-change: transform;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Hardware acceleration for animations */
+.premium-animate {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}

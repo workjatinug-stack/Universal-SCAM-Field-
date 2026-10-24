@@ -1,4 +1,4 @@
-# ScamShield - AI Scam Detection Platform
+# Sentra - AI Scam Detection Platform
 
 An AI-powered universal scam detection and verification system built with React, Node.js, and MySQL.
 

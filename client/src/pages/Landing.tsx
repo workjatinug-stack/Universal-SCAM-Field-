@@ -1,9 +1,10 @@
 import { FormEvent, useState } from "react";
 import { motion } from "framer-motion";
-import { Shield, Play, ShieldCheck, Lock, Globe, AlertTriangle, ScanLine, BrainCircuit, Sparkles, ShieldAlert, Fingerprint, CreditCard, Globe2, MessageSquare, Upload, Activity, X, Menu, Phone, Briefcase, ShoppingBag, Building2, TrendingUp, Users, Building, Mail, Zap, FileText, Image as ImageIcon } from "lucide-react";
+import { Shield, Play, ShieldCheck, Lock, Globe, AlertTriangle, ScanLine, BrainCircuit, Sparkles, ShieldAlert, Fingerprint, CreditCard, Globe2, MessageSquare, Upload, Activity, X, Menu, Phone, Briefcase, ShoppingBag, Building2, TrendingUp, Users, Building, Mail, Zap, FileText, Image as ImageIcon, LayoutDashboard, Gift, Package, Headphones, Link, UserX, AlertCircle, Box, CircleAlert } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 import ThemeToggle from "@/components/ThemeToggle";
+import logo from "@/assets/SENTRA AI Scam Detector Logo.png";
 
 type SourceType = "message" | "website" | "email" | "screenshot" | "payment" | "call" | "document";
 
@@ -18,10 +19,10 @@ type ScanResult = {
 const hotelScamExample = "Your hotel booking is confirmed! Pay ₹4,999 now to secure your room. Limited time offer — send payment to the personal UPI below: https://luxurystay-booking.com/verify";
 
 function riskColor(score: number) {
-  if (score >= 81) return "#C95C5C";
-  if (score >= 61) return "#D99A3D";
-  if (score >= 41) return "#D99A3D";
-  return "#4E9F72";
+  if (score >= 81) return "#FF3D00";
+  if (score >= 61) return "#FF8C00";
+  if (score >= 41) return "#FFB800";
+  return "#00E676";
 }
 
 function riskCopy(score: number) {
@@ -198,11 +199,14 @@ export default function Landing() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center transition-all duration-200" style={{ backgroundColor: "var(--accent)", border: "1px solid var(--border)", borderRadius: "10px" }}>
-                <Shield className="h-5 w-5" style={{ color: "#2FA7A0" }} strokeWidth={1.5} />
-              </div>
+              <img 
+                src={logo} 
+                alt="Sentra Logo" 
+                className="h-10 w-auto transition-all duration-200"
+                style={{ maxHeight: "2.5rem", objectFit: "contain" }}
+              />
               <div>
-                <div className="text-base font-semibold tracking-tight" style={{ color: "var(--foreground)" }}>Scam<span style={{ color: "#2FA7A0" }}>Shield</span></div>
+                <div className="text-base font-semibold tracking-tight" style={{ color: "var(--foreground)" }}>Sentra</div>
                 <div className="text-[9px] font-medium uppercase tracking-[0.15em]" style={{ color: "var(--muted)" }}>Detect. Verify. Stay Safe.</div>
               </div>
             </div>
@@ -229,8 +233,8 @@ export default function Landing() {
               </a>
               <a
                 href="#analyze"
-                className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold transition-all duration-200 hover:bg-[#38B8AF] hover:shadow-lg hover:-translate-y-0.5 active:scale-98 hidden md:flex"
-                style={{ backgroundColor: "#2FA7A0", color: "var(--background)", borderRadius: "12px" }}
+                className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold transition-all duration-200 hover:bg-[#00E6FF] hover:shadow-lg hover:-translate-y-0.5 active:scale-98 hidden md:flex"
+                style={{ backgroundColor: "#00C8FF", color: "#05080a", borderRadius: "12px" }}
               >
                 <ScanLine className="h-4 w-4" />
                 Analyze Now
@@ -263,7 +267,7 @@ export default function Landing() {
               <a
                 href="#analyze"
                 className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold"
-                style={{ backgroundColor: "#2FA7A0", color: "var(--background)", borderRadius: "12px" }}
+                style={{ backgroundColor: "#00C8FF", color: "#05080a", borderRadius: "12px" }}
               >
                 <ScanLine className="h-4 w-4" />
                 Analyze Now
@@ -282,7 +286,7 @@ export default function Landing() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
             >
-              <div className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium mb-6" style={{ backgroundColor: "var(--accent)", border: "1px solid var(--border)", color: "#2FA7A0", borderRadius: "9999px" }}>
+              <div className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium mb-6" style={{ backgroundColor: "var(--accent)", border: "1px solid var(--border)", color: "#00C8FF", borderRadius: "9999px" }}>
                 <ShieldCheck className="h-4 w-4" />
                 AI-Powered Security
               </div>
@@ -290,21 +294,29 @@ export default function Landing() {
               <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl" style={{ color: "var(--foreground)", lineHeight: 1.1, letterSpacing: "-0.02em" }}>
                 Detect Scams<br />
                 Before They<br />
-                <span style={{ color: "#2FA7A0" }}>Cost You.</span>
+                <span style={{ color: "#00C8FF" }}>Cost You.</span>
               </h1>
               
               <p className="mt-6 text-lg leading-relaxed" style={{ color: "var(--muted)", lineHeight: 1.7 }}>
-                ScamShield uses AI-powered analysis and cross-verification to identify suspicious messages, websites, payment requests, screenshots and digital fraud signals.
+                Sentra uses AI-powered analysis and cross-verification to identify suspicious messages, websites, payment requests, screenshots and digital fraud signals.
               </p>
               
               <div className="mt-8 flex flex-wrap gap-4">
                 <a
                   href="#analyze"
-                  className="inline-flex items-center gap-2 px-6 py-3 text-base font-semibold transition-all duration-200 hover:bg-[#38B8AF] hover:shadow-lg hover:-translate-y-0.5 active:scale-98"
-                  style={{ backgroundColor: "#2FA7A0", color: "var(--background)", borderRadius: "12px" }}
+                  className="inline-flex items-center gap-2 px-6 py-3 text-base font-semibold transition-all duration-200 hover:bg-[#00E6FF] hover:shadow-lg hover:-translate-y-0.5 active:scale-98"
+                  style={{ backgroundColor: "#00C8FF", color: "var(--background)", borderRadius: "12px" }}
                 >
                   <ScanLine className="h-5 w-5" />
                   Analyze a Scam
+                </a>
+                <a
+                  href="/app"
+                  className="inline-flex items-center gap-2 px-6 py-3 text-base font-semibold transition-all duration-200 hover:bg-[var(--accent)] hover:shadow-lg hover:-translate-y-0.5 active:scale-98"
+                  style={{ backgroundColor: "var(--card)", color: "var(--foreground)", border: "1px solid var(--border)", borderRadius: "12px" }}
+                >
+                  <LayoutDashboard className="h-5 w-5" />
+                  Go to Dashboard
                 </a>
                 <a
                   href="#how-it-works"
@@ -341,7 +353,7 @@ export default function Landing() {
               <div className="relative h-[500px] w-full" style={{ backgroundColor: "var(--card)", border: "1px solid var(--border)", borderRadius: "16px" }}>
                 <div className="absolute top-0 left-0 right-0 px-6 py-4 border-b" style={{ borderColor: "var(--border)" }}>
                   <div className="flex items-center gap-3">
-                    <ShieldCheck className="h-5 w-5" style={{ color: "#2FA7A0" }} />
+                    <ShieldCheck className="h-5 w-5" style={{ color: "#00C8FF" }} />
                     <span className="text-sm font-semibold" style={{ color: "var(--foreground)" }}>Security Verification</span>
                   </div>
                 </div>
@@ -350,7 +362,7 @@ export default function Landing() {
                   <div className="relative">
                     <div className="h-28 w-28 rounded-full" style={{ backgroundColor: "rgba(47,167,160,0.1)" }} />
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <Shield className="h-20 w-20" style={{ color: "#2FA7A0", strokeWidth: 1.5 }} />
+                      <Shield className="h-20 w-20" style={{ color: "#00C8FF", strokeWidth: 1.5 }} />
                     </div>
                   </div>
                 </div>
@@ -475,7 +487,7 @@ export default function Landing() {
                     onClick={() => handleTabChange(tab.id)}
                     className="flex items-center gap-2 px-4 py-2.5 text-sm font-medium transition-all duration-200"
                     style={{
-                      backgroundColor: activeTab === tab.id ? "#2FA7A0" : "var(--accent)",
+                      backgroundColor: activeTab === tab.id ? "#00C8FF" : "var(--accent)",
                       color: activeTab === tab.id ? "var(--background)" : "var(--muted)",
                       borderRadius: "10px",
                     }}
@@ -492,7 +504,7 @@ export default function Landing() {
                     className="w-full min-h-[200px] p-8 flex flex-col items-center justify-center transition-all duration-200"
                     style={{
                       backgroundColor: "var(--background)",
-                      border: isDragging ? "2px dashed #2FA7A0" : "1px solid var(--border)",
+                      border: isDragging ? "2px dashed #00C8FF" : "1px solid var(--border)",
                       color: "var(--foreground)",
                       borderRadius: "12px",
                       lineHeight: 1.6,
@@ -525,8 +537,8 @@ export default function Landing() {
                       </div>
                     ) : (
                       <>
-                        <div className="flex h-16 w-16 items-center justify-center rounded-full mb-4" style={{ backgroundColor: "#2FA7A020" }}>
-                          <ImageIcon className="h-8 w-8" style={{ color: "#2FA7A0" }} />
+                        <div className="flex h-16 w-16 items-center justify-center rounded-full mb-4" style={{ backgroundColor: "#00C8FF20" }}>
+                          <ImageIcon className="h-8 w-8" style={{ color: "#00C8FF" }} />
                         </div>
                         <p className="text-base font-semibold mb-2" style={{ color: "var(--foreground)" }}>
                           Upload a screenshot
@@ -543,8 +555,8 @@ export default function Landing() {
                         />
                         <label
                           htmlFor="screenshot-upload"
-                          className="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold transition-all duration-200 hover:bg-[#38B8AF] hover:shadow-lg hover:-translate-y-0.5 active:scale-98 cursor-pointer"
-                          style={{ backgroundColor: "#2FA7A0", color: "var(--background)", borderRadius: "12px" }}
+                          className="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold transition-all duration-200 hover:bg-[#00E6FF] hover:shadow-lg hover:-translate-y-0.5 active:scale-98 cursor-pointer"
+                          style={{ backgroundColor: "#00C8FF", color: "var(--background)", borderRadius: "12px" }}
                         >
                           <Upload className="h-5 w-5" />
                           Choose File
@@ -576,7 +588,7 @@ export default function Landing() {
                       lineHeight: 1.6,
                     }}
                     onFocus={(e) => {
-                      e.target.style.borderColor = "#2FA7A0";
+                      e.target.style.borderColor = "#00C8FF";
                       e.target.style.boxShadow = "0 0 0 3px rgba(47,167,160,0.1)";
                     }}
                     onBlur={(e) => {
@@ -596,7 +608,7 @@ export default function Landing() {
                       onMouseEnter={(e) => e.currentTarget.style.color = "var(--foreground)"}
                       onMouseLeave={(e) => e.currentTarget.style.color = "var(--muted)"}
                     >
-                      <Sparkles className="h-4 w-4" style={{ color: "#2FA7A0" }} />
+                      <Sparkles className="h-4 w-4" style={{ color: "#00C8FF" }} />
                       Try hotel scam example
                     </button>
                   )}
@@ -604,8 +616,8 @@ export default function Landing() {
                   <button
                     type="submit"
                     disabled={isAnalyzing || (activeTab === "screenshot" && !uploadedFile)}
-                    className="inline-flex items-center gap-2 px-6 py-3 text-base font-semibold transition-all duration-200 hover:bg-[#38B8AF] hover:shadow-lg hover:-translate-y-0.5 active:scale-98 disabled:opacity-50 disabled:cursor-not-allowed"
-                    style={{ backgroundColor: "#2FA7A0", color: "var(--background)", borderRadius: "12px" }}
+                    className="inline-flex items-center gap-2 px-6 py-3 text-base font-semibold transition-all duration-200 hover:bg-[#00E6FF] hover:shadow-lg hover:-translate-y-0.5 active:scale-98 disabled:opacity-50 disabled:cursor-not-allowed"
+                    style={{ backgroundColor: "#00C8FF", color: "var(--background)", borderRadius: "12px" }}
                   >
                     {isAnalyzing ? (
                       <>
@@ -625,15 +637,15 @@ export default function Landing() {
               {isAnalyzing && (
                 <div className="mt-6 space-y-3">
                   <div className="flex items-center gap-3 text-sm" style={{ color: "#9AA6B2" }}>
-                    <div className="h-2 w-2 rounded-full" style={{ backgroundColor: "#2FA7A0" }} />
+                    <div className="h-2 w-2 rounded-full" style={{ backgroundColor: "#00C8FF" }} />
                     {activeTab === "screenshot" ? "Processing image..." : "Analyzing suspicious signals..."}
                   </div>
                   <div className="flex items-center gap-3 text-sm" style={{ color: "#9AA6B2" }}>
-                    <div className="h-2 w-2 rounded-full" style={{ backgroundColor: "#2FA7A0" }} />
+                    <div className="h-2 w-2 rounded-full" style={{ backgroundColor: "#00C8FF" }} />
                     {activeTab === "screenshot" ? "Extracting text content..." : "Cross-verifying indicators..."}
                   </div>
                   <div className="flex items-center gap-3 text-sm" style={{ color: "#9AA6B2" }}>
-                    <div className="h-2 w-2 rounded-full" style={{ backgroundColor: "#2FA7A0" }} />
+                    <div className="h-2 w-2 rounded-full" style={{ backgroundColor: "#00C8FF" }} />
                     Calculating risk score...
                   </div>
                 </div>
@@ -752,7 +764,7 @@ export default function Landing() {
           >
             <h2 className="text-3xl font-bold sm:text-4xl" style={{ color: "var(--foreground)", letterSpacing: "-0.02em" }}>Every Scam Leaves a Fingerprint</h2>
             <p className="mt-4 text-lg" style={{ color: "var(--muted)", lineHeight: 1.7 }}>
-              ScamShield connects suspicious indicators across multiple data points
+              Sentra connects suspicious indicators across multiple data points
             </p>
           </motion.div>
 
@@ -767,7 +779,7 @@ export default function Landing() {
               <div className="absolute inset-0 flex items-center justify-center">
                 <motion.div
                   className="flex h-20 w-20 items-center justify-center rounded"
-                  style={{ backgroundColor: "#2FA7A0" }}
+                  style={{ backgroundColor: "#00C8FF" }}
                   animate={{
                     scale: [1, 1.05, 1],
                   }}
@@ -866,16 +878,18 @@ export default function Landing() {
 
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {[
-              { icon: CreditCard, title: "Financial Fraud", desc: "Banking & payment scams" },
-              { icon: Globe2, title: "UPI Scams", desc: "Fake payment requests" },
-              { icon: ShieldAlert, title: "Banking & KYC", desc: "Identity verification fraud" },
-              { icon: Briefcase, title: "Job Scams", desc: "Fake employment offers" },
-              { icon: ShoppingBag, title: "Shopping Fraud", desc: "E-commerce deception" },
-              { icon: Building2, title: "Hotel & Travel", desc: "Fake booking scams" },
-              { icon: TrendingUp, title: "Investment Scams", desc: "Fraudulent schemes" },
-              { icon: Users, title: "Social Media", desc: "Platform-based fraud" },
-              { icon: Building, title: "Government", desc: "Official impersonation" },
-              { icon: MessageSquare, title: "Phishing", desc: "Email & link scams" },
+              { icon: CreditCard, title: "Banking & Payment", desc: "OTP, KYC, and payment fraud", sourceType: "payment" },
+              { icon: AlertCircle, title: "OTP Scams", desc: "One-time password fraud", sourceType: "message" },
+              { icon: TrendingUp, title: "Investment Scams", desc: "Fake investment schemes", sourceType: "message" },
+              { icon: Gift, title: "Lottery & Prize", desc: "Fake winning notifications", sourceType: "message" },
+              { icon: Briefcase, title: "Fake Job Offers", desc: "Employment scams", sourceType: "message" },
+              { icon: ShoppingBag, title: "Fake Shopping", desc: "E-commerce deception", sourceType: "website" },
+              { icon: Box, title: "Delivery Scams", desc: "Fake parcel notifications", sourceType: "message" },
+              { icon: Headphones, title: "Customer Support", desc: "Fake tech support", sourceType: "call" },
+              { icon: Link, title: "Phishing", desc: "Email and link scams", sourceType: "email" },
+              { icon: UserX, title: "Impersonation", desc: "Identity theft attempts", sourceType: "message" },
+              { icon: Globe, title: "Suspicious URLs", desc: "Malicious link detection", sourceType: "website" },
+              { icon: Users, title: "Social Engineering", desc: "Psychological manipulation", sourceType: "message" },
             ].map((category, i) => (
               <motion.div
                 key={category.title}
@@ -884,10 +898,14 @@ export default function Landing() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: i * 0.05, ease: [0.22, 1, 0.36, 1] }}
                 whileHover={{ y: -2 }}
-                className="p-6 transition-all duration-250"
+                onClick={() => {
+                  setActiveTab(category.sourceType as SourceType);
+                  document.getElementById('analyze')?.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className="p-6 transition-all duration-250 cursor-pointer"
                 style={{ backgroundColor: "var(--card)", border: "1px solid var(--border)", borderRadius: "16px" }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = "#2FA7A0";
+                  e.currentTarget.style.borderColor = "#00C8FF";
                   e.currentTarget.style.boxShadow = "0 4px 20px rgba(0,0,0,0.15)";
                 }}
                 onMouseLeave={(e) => {
@@ -896,10 +914,11 @@ export default function Landing() {
                 }}
               >
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded" style={{ backgroundColor: "var(--background)" }}>
-                  <category.icon className="h-6 w-6" style={{ color: "#2FA7A0" }} />
+                  <category.icon className="h-6 w-6" style={{ color: "#00C8FF" }} />
                 </div>
                 <h3 className="text-lg font-semibold" style={{ color: "var(--foreground)" }}>{category.title}</h3>
                 <p className="mt-2 text-sm" style={{ color: "var(--muted)", lineHeight: 1.6 }}>{category.desc}</p>
+                <div className="mt-4 text-xs font-medium" style={{ color: "#00C8FF" }}>Click to analyze →</div>
               </motion.div>
             ))}
           </div>
@@ -938,7 +957,7 @@ export default function Landing() {
                 className="relative"
               >
                 <div className="text-5xl font-extrabold" style={{ color: "rgba(47,167,160,0.2)" }}>{item.step}</div>
-                <div className="mt-4 flex h-12 w-12 items-center justify-center rounded" style={{ backgroundColor: "#2FA7A0" }}>
+                <div className="mt-4 flex h-12 w-12 items-center justify-center rounded" style={{ backgroundColor: "#00C8FF" }}>
                   <item.icon className="h-6 w-6" style={{ color: "var(--background)" }} />
                 </div>
                 <h3 className="mt-4 text-xl font-bold" style={{ color: "var(--foreground)" }}>{item.title}</h3>
@@ -1044,7 +1063,7 @@ export default function Landing() {
                 className="p-6 transition-all duration-250"
                 style={{ backgroundColor: "var(--card)", border: "1px solid var(--border)", borderRadius: "16px" }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = "#2FA7A0";
+                  e.currentTarget.style.borderColor = "#00C8FF";
                   e.currentTarget.style.boxShadow = "0 4px 20px rgba(0,0,0,0.15)";
                 }}
                 onMouseLeave={(e) => {
@@ -1053,7 +1072,7 @@ export default function Landing() {
                 }}
               >
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded" style={{ backgroundColor: "var(--background)" }}>
-                  <feature.icon className="h-6 w-6" style={{ color: "#2FA7A0" }} />
+                  <feature.icon className="h-6 w-6" style={{ color: "#00C8FF" }} />
                 </div>
                 <h3 className="text-lg font-semibold" style={{ color: "var(--foreground)" }}>{feature.title}</h3>
                 <p className="mt-2 text-sm" style={{ color: "var(--muted)", lineHeight: 1.6 }}>{feature.desc}</p>
@@ -1069,11 +1088,14 @@ export default function Landing() {
           <div className="grid gap-8 md:grid-cols-4">
             <div className="md:col-span-2">
               <div className="flex items-center gap-3 mb-4">
-                <div className="flex h-9 w-9 items-center justify-center" style={{ backgroundColor: "var(--accent)", border: "1px solid var(--border)", borderRadius: "10px" }}>
-                  <Shield className="h-5 w-5" style={{ color: "#2FA7A0" }} strokeWidth={1.5} />
-                </div>
+                <img 
+                  src={logo} 
+                  alt="Sentra Logo" 
+                  className="h-10 w-auto"
+                  style={{ maxHeight: "2.5rem", objectFit: "contain" }}
+                />
                 <div>
-                  <div className="text-lg font-bold" style={{ color: "var(--foreground)" }}>Scam<span style={{ color: "#2FA7A0" }}>Shield</span></div>
+                  <div className="text-lg font-bold" style={{ color: "var(--foreground)" }}>Sentra</div>
                   <div className="text-xs" style={{ color: "var(--muted)" }}>Detect. Verify. Stay Safe.</div>
                 </div>
               </div>
@@ -1104,7 +1126,7 @@ export default function Landing() {
           </div>
 
           <div className="mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4" style={{ borderTop: "1px solid var(--border)" }}>
-            <p className="text-sm" style={{ color: "var(--muted)" }}>© 2026 ScamShield. All rights reserved.</p>
+            <p className="text-sm" style={{ color: "var(--muted)" }}>© 2026 Sentra. All rights reserved.</p>
             <div className="flex items-center gap-4">
               <a href="#" className="transition-all duration-200" style={{ color: "var(--muted)" }} onMouseEnter={(e) => e.currentTarget.style.color = "var(--foreground)"} onMouseLeave={(e) => e.currentTarget.style.color = "var(--muted)"}>
                 <Shield className="h-5 w-5" />

@@ -54,11 +54,7 @@ class RedisCache {
       });
 
       this.client.on("error", (err) => {
-        // Only log once when Redis is not available
-        if (!this.hasLoggedRedisError) {
-          console.warn("Redis is not available. Running without cache. Set REDIS_HOST environment variable to enable caching.");
-          this.hasLoggedRedisError = true;
-        }
+        // Silently handle Redis unavailability - it's optional for development
         this.isConnected = false;
       });
 
@@ -70,11 +66,7 @@ class RedisCache {
       await this.client.ping();
       console.log("Redis connection established successfully");
     } catch (error) {
-      // Only log once when Redis is not available
-      if (!this.hasLoggedRedisError) {
-        console.warn("Redis is not available. Running without cache. Set REDIS_HOST environment variable to enable caching.");
-        this.hasLoggedRedisError = true;
-      }
+      // Silently handle Redis unavailability - it's optional for development
       this.isConnected = false;
       // Don't throw error - allow application to run without Redis
     }
@@ -277,7 +269,8 @@ export async function initializeRedis(): Promise<void> {
   try {
     await cache.connect();
   } catch (error) {
-    console.warn("Redis connection failed, running without cache");
+    // Silently fail for development - Redis is optional
+    console.log("Redis not available (optional service)");
   }
 }
 

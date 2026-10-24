@@ -38,6 +38,7 @@ import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import logo from "@/assets/SENTRA AI Scam Detector Logo.png";
 
 type View = "overview" | "scanner" | "history" | "community" | "settings";
 type SourceType = "message" | "website" | "email" | "screenshot" | "payment" | "call" | "document";
@@ -67,14 +68,14 @@ function formatDate(value: Date | string | number | undefined) {
 }
 
 function riskColor(score: number) {
-  if (score >= 81) return "#ef4444";
-  if (score >= 61) return "#f97316";
-  if (score >= 41) return "#eab308";
-  return "#22c55e";
+  if (score >= 81) return "#FF3D00";
+  if (score >= 61) return "#FF8C00";
+  if (score >= 41) return "#FFB800";
+  return "#00E676";
 }
 
 function riskCopy(score: number) {
-  if (score >= 81) return "Very High Risk";
+  if (score >= 81) return "Critical Risk";
   if (score >= 61) return "High Risk";
   if (score >= 41) return "Suspicious";
   return "Low Risk";
@@ -83,33 +84,22 @@ function riskCopy(score: number) {
 function Logo() {
   return (
     <div className="flex items-center gap-3">
-      <div 
-        className="flex h-12 w-12 items-center justify-center rounded-xl transition-all duration-300 hover:scale-105"
-        style={{ 
-          background: "linear-gradient(135deg, rgba(47,167,160,0.15) 0%, rgba(47,167,160,0.05) 100%)",
-          border: "1.5px solid rgba(47,167,160,0.3)",
-          boxShadow: "0 0 20px rgba(47,167,160,0.15)"
-        }}
-      >
-        <div className="relative">
-          <ShieldCheck className="h-7 w-7" strokeWidth={1.5} style={{ color: "var(--brand-primary)" }} />
-          <div 
-            className="absolute -top-1 -right-1 h-2.5 w-2.5 rounded-full"
-            style={{ backgroundColor: "var(--brand-primary)", boxShadow: "0 0 8px var(--brand-primary)" }}
-          />
-        </div>
-      </div>
+      <img 
+        src={logo} 
+        alt="Sentra Logo" 
+        className="h-12 w-auto transition-all duration-300 hover:scale-105"
+        style={{ maxHeight: "3rem", objectFit: "contain" }}
+      />
       <div className="flex flex-col">
         <div className="flex items-baseline gap-1">
-          <span className="text-[19px] font-bold tracking-tight" style={{ color: "var(--foreground)" }}>Scam</span>
           <span 
             className="text-[19px] font-bold tracking-tight"
             style={{ 
               color: "var(--brand-primary)",
-              textShadow: "0 0 20px rgba(47,167,160,0.3)"
+              textShadow: "0 0 20px rgba(0, 200, 255, 0.3)"
             }}
           >
-            Shield
+            Sentra
           </span>
         </div>
         <div className="flex items-center gap-2 mt-0.5">
@@ -118,7 +108,7 @@ function Logo() {
             style={{ background: "linear-gradient(90deg, var(--brand-primary) 0%, transparent 100%)" }}
           />
           <div className="text-[9px] font-medium uppercase tracking-[0.18em]" style={{ color: "var(--muted)" }}>
-            AI-Powered Protection
+            Universal AI Scam Detector
           </div>
         </div>
       </div>
@@ -420,7 +410,7 @@ function Scanner({ onResult }: { onResult: (result: ScanResult) => void }) {
             <div>
               <div className="text-xl font-bold" style={{ color: "var(--foreground)" }}>What would you like to verify?</div>
               <div className="mt-2 max-w-xl text-sm leading-6" style={{ color: "var(--muted)" }}>
-                Paste a message, website URL, email, payment request, or transcript. ScamShield will identify patterns and explain the risk.
+                Paste a message, website URL, email, payment request, or transcript. Sentra will identify patterns and explain the risk.
               </div>
             </div>
             <div 
@@ -579,7 +569,7 @@ function Scanner({ onResult }: { onResult: (result: ScanResult) => void }) {
             className="mt-6 pt-5 text-xs leading-5"
             style={{ borderTop: "1px solid var(--border)", color: "var(--muted)" }}
           >
-            <ShieldCheck className="mr-2 inline h-4 w-4" style={{ color: "var(--brand-primary)" }} /> ScamShield is an assistive tool. Always verify high-impact decisions through official channels.
+            <ShieldCheck className="mr-2 inline h-4 w-4" style={{ color: "var(--brand-primary)" }} /> Sentra is an assistive tool. Always verify high-impact decisions through official channels.
           </div>
         </div>
       </div>
@@ -608,7 +598,7 @@ function ResultPanel({ result, onNewScan }: { result: ScanResult; onNewScan: () 
           </div>
           <h2 className="text-2xl font-bold" style={{ color: "var(--foreground)" }}>{result.scamType}</h2>
           <p className="mt-2 max-w-2xl text-sm" style={{ color: "var(--muted)" }}>
-            ScamShield connected multiple signals to build an explainable risk fingerprint.
+            Sentra connected multiple signals to build an explainable risk fingerprint.
           </p>
         </div>
         <Button 
@@ -973,7 +963,7 @@ function SettingsView({ user, onLogout }: { user: { name?: string | null; email?
             </div>
             <div>
               <div className="font-bold" style={{ color: "var(--foreground)" }}>Protection preferences</div>
-              <div className="text-xs" style={{ color: "var(--muted)" }}>Controls for your ScamShield experience</div>
+              <div className="text-xs" style={{ color: "var(--muted)" }}>Controls for your Sentra experience</div>
             </div>
           </div>
           {["Show explainable risk reasons", "Include community intelligence", "Warn before high-risk actions"].map((item, index) => (

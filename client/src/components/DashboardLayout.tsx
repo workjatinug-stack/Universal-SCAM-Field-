@@ -21,12 +21,13 @@ import {
 } from "@/components/ui/sidebar";
 import { startLogin } from "@/const";
 import { useIsMobile } from "@/hooks/useMobile";
-import { LayoutDashboard, LogOut, PanelLeft, Shield, Users } from "lucide-react";
+import { LayoutDashboard, LogOut, PanelLeft, Users } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { DashboardLayoutSkeleton } from './DashboardLayoutSkeleton';
 import { Button } from "./ui/button";
 import ThemeToggle from "./ThemeToggle";
+import logo from "@/assets/SENTRA AI Scam Detector Logo.png";
 
 const menuItems = [
   { icon: LayoutDashboard, label: "Page 1", path: "/" },
@@ -173,41 +174,22 @@ function DashboardLayoutContent({
               </button>
               {!isCollapsed ? (
                 <div className="flex items-center gap-2 min-w-0">
-                  <div 
-                    className="flex h-9 w-9 items-center justify-center rounded-lg transition-all duration-300 hover:scale-105"
-                    style={{ 
-                      background: "linear-gradient(135deg, rgba(47,167,160,0.15) 0%, rgba(47,167,160,0.05) 100%)",
-                      border: "1.5px solid rgba(47,167,160,0.3)",
-                      boxShadow: "0 0 15px rgba(47,167,160,0.15)"
-                    }}
-                  >
-                    <div className="relative">
-                      <Shield className="h-5 w-5" style={{ color: "#2FA7A0" }} strokeWidth={1.5} />
-                      <div 
-                        className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full"
-                        style={{ backgroundColor: "#2FA7A0", boxShadow: "0 0 6px #2FA7A0" }}
-                      />
-                    </div>
-                  </div>
+                  <img 
+                    src={logo} 
+                    alt="Sentra Logo" 
+                    className="h-9 w-auto transition-all duration-300 hover:scale-105"
+                    style={{ maxHeight: "2.25rem", objectFit: "contain" }}
+                  />
                   <div className="flex flex-col min-w-0">
                     <div className="flex items-baseline gap-0.5">
                       <span className="font-semibold tracking-tight truncate text-sm" style={{ color: "var(--foreground)" }}>
-                        Scam
-                      </span>
-                      <span 
-                        className="font-semibold tracking-tight truncate text-sm"
-                        style={{ 
-                          color: "#2FA7A0",
-                          textShadow: "0 0 15px rgba(47,167,160,0.3)"
-                        }}
-                      >
-                        Shield
+                        Sentra
                       </span>
                     </div>
                     <div className="flex items-center gap-1.5 mt-0.5">
                       <div 
                         className="h-px w-6"
-                        style={{ background: "linear-gradient(90deg, #2FA7A0 0%, transparent 100%)" }}
+                        style={{ background: "linear-gradient(90deg, #00C8FF 0%, transparent 100%)" }}
                       />
                       <span className="text-[8px] font-medium uppercase tracking-[0.15em]" style={{ color: "var(--muted)" }}>
                         AI-Powered
@@ -302,9 +284,15 @@ function DashboardLayoutContent({
             <div className="flex items-center gap-2">
               <SidebarTrigger className="h-9 w-9 rounded-lg" style={{ backgroundColor: "var(--accent)", border: "1px solid var(--border)" }} />
               <div className="flex items-center gap-3">
+                <img 
+                  src={logo} 
+                  alt="Sentra Logo" 
+                  className="h-8 w-auto"
+                  style={{ maxHeight: "2rem", objectFit: "contain" }}
+                />
                 <div className="flex flex-col gap-1">
                   <span className="tracking-tight text-sm font-semibold" style={{ color: "var(--foreground)" }}>
-                    Scam<span style={{ color: "#2FA7A0" }}>Shield</span>
+                    Sentra
                   </span>
                   <span className="text-[8px] font-medium uppercase tracking-[0.15em]" style={{ color: "var(--muted)" }}>
                     {activeMenuItem?.label ?? "Menu"}
